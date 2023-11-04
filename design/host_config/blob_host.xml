@@ -1,0 +1,41 @@
+<mmap>
+    <filename>debug.log</filename>
+    <global>
+         <logo_filename>blob.png</logo_filename>
+         <device_name>blob</device_name>
+         <description>blob starter controller.</description>
+         <data_path_width>32</data_path_width>
+         <auto_ack>127</auto_ack>
+         <memory_pack>zero_align</memory_pack>
+         <register_pack>zero_align</register_pack>
+         <generation_directory>../generated</generation_directory>
+         <documentation_directory>../../docs</documentation_directory>
+         <xreg_version>xreg_v1_0_0</xreg_version>
+		 <language>verilog</language>
+    </global>
+    <modules>
+        <module name="host" offset="0x0">
+            <register name="device_id"          type="rdconst" mask="0xFFFFFFFF" default="0x19845150" description="Device ID for blob controller."></register>
+            <register name="version_id0"        type="rdconst" mask="0xFFFFFFFF" default="0x00010000" description="Version register for the top level design.">
+                <field name="minor" offset="0b"  size="2B" description="Minor Version."></field>
+                <field name="major" offset="16b" size="2B" description="Major Version."></field>
+                </register>
+            <register name="version_id1"  type="rdconst" mask="0xFFFFFFFF" default="0x00000000" description="Development build version and debug version">
+                <field name="build" offset="0b"  size="2B" description="Build Version."></field>
+                <field name="debug" offset="16b" size="2B" description="Debug Version."></field>
+                </register>
+            <register name="core_cntrl"   type="rdwr" mask="0x00000003" default="0x00000000" description="Core control register - controls device datapath.">
+                <field name="enable_xcvr0" offset="0b"  size="1b" description="Enable interface 0 == 1 : Disable interface 0 == 0"></field>
+                <field name="enable_xcvr1" offset="1b"  size="1b" description="Enable interface 1 == 1 : Disable interface 1 == 0"></field>
+                </register>
+            <register name="core_ddr4"      type="rdwr" mask="0x0000000F" default="0x00000000" description="DDR4 Memory control - control DDR4 memmory interface.">
+                <field name="BIST_start"    size="1b" description="Start BIST == 1 : Auto clears after BIST Begins" ></field>
+                <field name="BIST_ip"       size="1b" description="BIST is currently in progress == 1 : Bist is idle == 0"></field>
+                <field name="BIST_done"     size="1b" description="BIST Test done == 1 : BIST_done is cleared when BIST_start is set or BIST_ip is set."></field>
+                <field name="BIST_stat"     size="1b" description="Valid when BIST_done == 0.  BIST Test has passed == 1 : Bist Test has failed == 0"></field>
+            </register>
+            <memory name="packet_fifo" memsize="0x1000" duplicate="4" type="mem_rd_pulse"
+                description="Debug capture of RX frames on ingress per port." ></memory>
+        </module>
+    </modules>
+</mmap>
